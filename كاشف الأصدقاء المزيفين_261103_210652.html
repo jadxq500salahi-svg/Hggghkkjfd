@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>كاشف الأصدقاء المزيفين!</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- FontAwesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Google Fonts Arabic (Cairo) -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+body {
+font-family: 'Cairo', sans-serif;
+background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+min-height: 100vh;
+}
+
+/* Stroke styling for main title */
+.title-stroke {
+color: #000000;
+text-shadow:
+-2px -2px 0 #ffffff,
+ 2px -2px 0 #ffffff,
+-2px 2px 0 #ffffff,
+2px 2px 0 #ffffff,
+-3px 0px 0 #ffffff,
+3px 0px 0 #ffffff,
+0px -3px 0 #ffffff,
+0px 3px 0 #ffffff,
+0px 5px 10px rgba(0,0,0,0.15);
+}
+
+.btn-yellow {
+background-color: #facc15;
+transition: all 0.2s ease-in-out;
+box-shadow: 0 4px 14px rgba(234, 179, 8, 0.4);
+}
+.btn-yellow:hover {
+background-color: #eab308;
+transform: translateY(-2px);
+box-shadow: 0 6px 20px rgba(234, 179, 8, 0.6);
+}
+.btn-yellow:active {
+transform: translateY(0);
+}
+
+/* Glassmorphism Card Style */
+.glass-card {
+background: rgba(255, 255, 255, 0.92);
+backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.8);
+box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.pulse-btn {
+animation: pulse-animation 2s infinite;
+}
+@keyframes pulse-animation {
+0% { transform: scale(1); }
+50% { transform: scale(1.03); }
+100% { transform: scale(1); }
+}
+</style>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 antialiased p-4 sm:p-6">
+
+<!-- Header / Branding Section -->
+<header class="text-center mt-4 mb-8">
+<div class="inline-block px-4 py-1 bg-white/70 backdrop-blur-md rounded-full text-xs font-bold text-sky-700 mb-3 border border-sky-200 shadow-sm">
+🕵️‍♂️ اختبار الصداقة الحقيقية
+</div>
+<h1 class="text-3xl sm:text-5xl font-extrabold tracking-wide title-stroke leading-tight max-w-3xl mx-auto px-2">
+كاشف الأصدقاء المزيفين! اكتشف هل أصدقاؤك مزيفون؟
+</h1>
+</header>
+
+<!-- Main Dynamic Content Container -->
+<main class="max-w-2xl w-full mx-auto flex-grow flex flex-col justify-center">
+
+<!-- SCREEN 1: Home / Intro Screen -->
+<div id="screen-home" class="glass-card rounded-3xl p-6 sm:p-10 text-center transition-all duration-300">
+<div class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl shadow-inner border-2 border-yellow-300">
+🕵️‍♀️
+</div>
+<h2 class="text-2xl font-bold mb-3 text-slate-800">هل تثق بأصدقائك حقاً؟</h2>
+<p class="text-slate-600 mb-8 leading-relaxed">
+أنشئ اختبارك الخاص بإجاباتك المفضلة، وشارك الرابط مع أصدقائك لتكتشف من يعرفك حقاً ومن يدّعي الصداقة فقط!
+</p>
+
+<button onclick="startQuizCreation()" class="btn-yellow pulse-btn text-black font-bold text-xl py-4 px-10 rounded-2xl w-full sm:w-auto inline-flex items-center justify-center gap-3 border-2 border-yellow-400">
+<i class="fa-solid fa-wand-magic-sparkles"></i>
+تصميم اختبار
+</button>
+</div>
+
+<!-- SCREEN 2: Creator Info Input (Name & Gender) -->
+<div id="screen-setup" class="glass-card rounded-3xl p-6 sm:p-8 hidden">
+<h2 class="text-xl font-bold mb-6 text-center text-slate-800 border-b pb-4 border-slate-200">
+📝 الخطوة الأولى: إعداد معلوماتك
+</h2>
+
+<div class="space-y-6">
+<div>
+<label class="block font-bold text-slate-700 mb-2 text-sm sm:text-base">ما هو اسمك؟</label>
+<input type="text" id="creator-name" placeholder="أدخل اسمك هنا..."
+class="w-full px-4 py-3 rounded-xl border border-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white shadow-sm font-semibold text-lg">
+</div>
+
+<div>
+<label class="block font-bold text-slate-700 mb-2 text-sm sm:text-base">الجنس:</label>
+<div class="grid grid-cols-2 gap-4">
+<label class="cursor-pointer">
+<input type="radio" name="creator-gender" value="male" checked class="peer hidden">
+<div class="p-4 text-center rounded-2xl border-2 border-slate-200 peer-checked:border-sky-500 peer-checked:bg-sky-50 font-bold transition-all flex flex-col items-center gap-2">
+<span class="text-3xl">👨</span>
+<span>ذكر</span>
+</div>
+</label>
+<label class="cursor-pointer">
+<input type="radio" name="creator-gender" value="female" class="peer hidden">
+<div class="p-4 text-center rounded-2xl border-2 border-slate-200 peer-checked:border-pink-500 peer-checked:bg-pink-50 font-bold transition-all flex flex-col items-center gap-2">
+<span class="text-3xl">👩</span>
+<span>أنثى</span>
+</div>
+</label>
+</div>
+</div>
+
+<button onclick="saveSetupAndProceed()" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-md flex items-center justify-center gap-2 text-lg">
+<span>متابعة للأسئلة</span>
+<i class="fa-solid fa-arrow-left"></i>
+</button>
+</div>
+</div>
+
+<!-- SCREEN 3: Quiz Builder (Question by Question) -->
+<div id="screen-builder" class="glass-card rounded-3xl p-6 sm:p-8 hidden relative">
+<!-- Top Bar: Edit Button (Top-Left RTL context) & Step Counter -->
+<div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-200">
+<span id="step-indicator" class="bg-sky-100 text-sky-800 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-full">
+السؤال 1 من 5
+</span>
+
+<!-- Mandatory Edit Button -->
+<button onclick="openEditModal()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 font-bold text-sm px-4 py-2 rounded-xl transition flex items-center gap-2 shadow-sm">
+<i class="fa-solid fa-pen-to-square"></i>
+<span>تعديل الإجابات</span>
+</button>
+</div>
+
+<!-- Current Question Title -->
+<h2 id="builder-question-text" class="text-xl sm:text-2xl font-bold text-slate-800 mb-6 leading-snug">
+<!-- Dynamic Question Text -->
+</h2>
+
+<p class="text-xs text-slate-500 mb-4 font-semibold">اختر إجابتك الصحيحة (التي يجب على أصدقائك تخمينها):</p>
+
+<!-- Answers List -->
+<div id="builder-options-list" class="space-y-3 mb-8">
+<!-- Dynamic Options Rendered Here -->
+</div>
+
+<!-- Question Navigation Footer -->
+<div class="flex items-center justify-between gap-4 pt-4 border-t border-slate-100">
+<button id="btn-prev-q" onclick="prevQuestion()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 px-5 rounded-xl transition text-sm flex items-center gap-2">
+<i class="fa-solid fa-arrow-right"></i>
+السابق
+</button>
+
+<button id="btn-next-q" onclick="nextQuestion()" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 px-6 rounded-xl transition text-sm flex items-center gap-2 shadow-md">
+<span>التالي</span>
+<i class="fa-solid fa-arrow-left"></i>
+</button>
+</div>
+</div>
+
+<!-- SCREEN 4: Quiz Completed & Share Ready -->
+<div id="screen-share" class="glass-card rounded-3xl p-6 sm:p-8 text-center hidden">
+<div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-4 border-2 border-emerald-300">
+🎯
+</div>
+
+<h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mb-2">
+اختبارك أصبح جاهزاً! 🎉
+</h2>
+<p class="text-slate-600 font-semibold mb-6">
+كاشف الأصدقاء المزيفين جاهز! شاركه الآن واكتشف من هم أصدقاؤك الحقيقيون والمميزون.
+</p>
+
+<!-- Generated Link Box -->
+<div class="bg-slate-100 p-4 rounded-2xl mb-6 border border-slate-200">
+<label class="block text-xs font-bold text-slate-500 mb-2">رابط اختبارك الخاص:</label>
+<div class="flex items-center gap-2">
+<input type="text" id="share-link-input" readonly class="w-full bg-white px-3 py-2 rounded-xl text-xs sm:text-sm text-slate-700 font-mono border border-slate-300 focus:outline-none">
+<button onclick="copyShareLink()" class="bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-1 shrink-0 shadow">
+<i class="fa-solid fa-copy"></i>
+<span>نسخ</span>
+</button>
+</div>
+</div>
+
+<!-- Social Media Buttons -->
+<h3 class="font-bold text-slate-700 mb-4 text-sm">شارك الاختبار مباشرة عبر التطبيقات:</h3>
+<div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+<!-- WhatsApp -->
+<button onclick="shareSocial('whatsapp')" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold transition shadow-sm">
+<i class="fa-brands fa-whatsapp text-2xl mb-1"></i>
+<span class="text-xs">واتساب</span>
+</button>
+<!-- Telegram -->
+<button onclick="shareSocial('telegram')" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-bold transition shadow-sm">
+<i class="fa-brands fa-telegram text-2xl mb-1"></i>
+<span class="text-xs">تليجرام</span>
+</button>
+<!-- Facebook -->
+<button onclick="shareSocial('facebook')" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition shadow-sm">
+<i class="fa-brands fa-facebook text-2xl mb-1"></i>
+<span class="text-xs">فيسبوك</span>
+</button>
+<!-- Snapchat -->
+<button onclick="shareSocial('snapchat')" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-yellow-400 hover:bg-yellow-500 text-black font-bold transition shadow-sm">
+<i class="fa-brands fa-snapchat text-2xl mb-1"></i>
+<span class="text-xs">سناب شات</span>
+</button>
+<!-- Instagram -->
+<button onclick="shareSocial('instagram')" class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center p-3 rounded-2xl bg-gradient-to-tr from-yellow-500 via-red-500 to-purple-600 hover:opacity-90 text-white font-bold transition shadow-sm">
+<i class="fa-brands fa-instagram text-2xl mb-1"></i>
+<span class="text-xs">انستغرام</span>
+</button>
+</div>
+
+<button onclick="resetToHome()" class="text-slate-500 hover:text-slate-800 text-sm font-bold underline">
+إنشاء اختبار جديد 🔄
+</button>
+</div>
+
+<!-- SCREEN 5: Taking Quiz (For Friends opening the link) -->
+<div id="screen-taker" class="glass-card rounded-3xl p-6 sm:p-8 hidden">
+<div class="text-center mb-6 border-b pb-4 border-slate-200">
+<span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-3 py-1 rounded-full border border-yellow-300 mb-2 inline-block">
+🕵️‍♂️ أنت الآن تخوض اختبار صديقك!
+</span>
+<h2 id="taker-welcome-title" class="text-xl sm:text-2xl font-extrabold text-slate-800">
+اختبار كشف الصداقة الخاص بـ <span id="target-creator-name" class="text-sky-600">...</span>
+</h2>
+</div>
+
+<!-- Friend Name Input Prompt before starting -->
+<div id="taker-name-step" class="space-y-4">
+<label class="block font-bold text-slate-700 text-center">أدخل اسمك أولاً للبدء بالإجابة:</label>
+<input type="text" id="friend-taker-name" placeholder="اسمك الكريم..." class="w-full px-4 py-3 rounded-xl border border-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white font-semibold">
+<button onclick="startFriendAnswering()" class="w-full btn-yellow text-black font-bold py-3.5 rounded-xl text-lg shadow-md border border-yellow-400">
+ابدأ الاختبار الآن 🚀
+</button>
+</div>
+
+<!-- Active Answering Step -->
+<div id="taker-questions-step" class="hidden space-y-6">
+<div class="flex items-center justify-between text-xs font-bold text-slate-500">
+<span id="taker-q-num">السؤال 1 من 5</span>
+<span>اختر الإجابة الصحيحة</span>
+</div>
+
+<h3 id="taker-q-text" class="text-lg sm:text-xl font-bold text-slate-800"></h3>
+
+<div id="taker-options-container" class="space-y-3">
+<!-- Options for taker -->
+</div>
+</div>
+</div>
+
+<!-- SCREEN 6: Quiz Results for Friend -->
+<div id="screen-result" class="glass-card rounded-3xl p-6 sm:p-8 text-center hidden">
+<div id="result-badge" class="w-24 h-24 rounded-full flex items-center justify-center text-5xl mx-auto mb-4 border-4 shadow-lg">
+<!-- Icon loaded dynamically -->
+</div>
+
+<h2 id="result-score-title" class="text-3xl font-extrabold mb-2 text-slate-800">
+نتيجة الاختبار: 0%
+</h2>
+
+<p id="result-status-text" class="text-lg font-bold mb-4 text-slate-700"></p>
+
+<div id="result-description" class="p-4 rounded-2xl bg-sky-50 text-sky-900 border border-sky-200 text-sm leading-relaxed mb-6 font-semibold">
+<!-- Description loaded dynamically -->
+</div>
+
+<div class="space-y-3">
+<button onclick="resetToHome()" class="w-full btn-yellow text-black font-bold py-3.5 rounded-xl text-lg shadow-md border border-yellow-400">
+صمم اختبارك الخاص الآن 🔥
+</button>
+</div>
+</div>
+
+</main>
+
+<!-- Custom Toast Message Notification -->
+<div id="toast" class="fixed bottom-5 right-1/2 translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-2xl opacity-0 pointer-events-none transition-all duration-300 text-sm font-bold flex items-center gap-2 border border-slate-700 z-50">
+<i class="fa-solid fa-circle-check text-emerald-400"></i>
+<span id="toast-msg">تم نسخ الرابط بنجاح!</span>
+</div>
+
+<!-- MODAL: Mandatory Answer Editor (For Add/Edit/Delete options) -->
+<div id="edit-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+<div class="glass-card rounded-3xl max-w-lg w-full p-6 shadow-2xl bg-white max-h-[90vh] flex flex-col">
+<div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+<h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+<i class="fa-solid fa-sliders text-amber-500"></i>
+تعديل وتخصيص إجابات السؤال
+</h3>
+<button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 font-bold text-xl px-2">×</button>
+</div>
+
+<p class="text-xs text-slate-500 mb-4">يمكنك تعديل نصوص الإجابات الحالية، حذف أي إجابة، أو إضافة خيارات جديدة بسهولة:</p>
+
+<!-- Editable List of Options -->
+<div id="modal-options-list" class="space-y-3 overflow-y-auto max-h-60 p-1 mb-4">
+<!-- Inputs generated dynamically -->
+</div>
+
+<!-- Add Option Form -->
+<div class="flex gap-2 mb-6 pt-2 border-t border-slate-100">
+<input type="text" id="new-option-input" placeholder="اكتب خياراً جديداً..." class="flex-grow px-3 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500">
+<button onclick="addNewOptionToCurrent()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs px-4 py-2 rounded-xl transition shrink-0">
++ إضافة
+</button>
+</div>
+
+<div class="flex justify-end gap-3 pt-3 border-t border-slate-200">
+<button onclick="saveEditChanges()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl transition text-sm">
+حفظ التغييرات ✅
+</button>
+</div>
+</div>
+</div>
+
+<!-- Application Logic Script -->
+<script>
+// State Management
+let quizState = {
+creatorName: "",
+creatorGender: "male",
+answers: [], // Stores index of correct answers chosen by creator
+questions: [] // Cloned template questions (allowing full editing)
+};
+
+let currentQuestionIndex = 0;
+
+// Friend Taking State
+let friendState = {
+friendName: "",
+answers: []
+};
+
+// Standard Default Questions Template
+const baseQuestionsTemplate = [
+{
+id: 1,
+title: "ما هو طعام [الاسم] السريع المفضل؟",
+options: ["بيتزا 🍕", "برغر 🍔", "دجاج مشوي 🍗", "تاكو 🌮", "هوت دوغ 🌭"]
+},
+{
+id: 2,
+title: "ما هي هواية [الاسم] المفضلة؟",
+options: ["القراءة 📚", "السباحة 🏊‍♂️", "كرة القدم ⚽", "ألعاب الفيديو 🎮", "الموسيقى 🎧", "الرسم 🎨"]
+},
+{
+id: 3,
+title: "ما هو أكثر شيء يكرهه [الاسم]؟",
+options: ["الإنترنت البطيء 🛜", "الطوابير الطويلة ⏳", "الردود المتأخرة 💬", "الاستيقاظ مبكراً ⏰", "الضوضاء 🔊", "الكذب 🤥"]
+},
+{
+id: 4,
+titleGenderDependant: {
+male: "كيف يتصرف [الاسم] غالباً إذا تعرض لموقف مزعج؟",
+female: "كيف تتصرف [الاسم] غالباً إذا تعرضت لموقف مزعج؟"
+},
+optionsGenderDependant: {
+male: ["يهدأ ويأخذ الأمور ببساطة 😌", "ينفجر غضباً 🔥", "يمزح ليتخطى الموقف 😂", "يصمت تماماً 🤫"],
+female: ["تهدأ وتأخذ الأمور ببساطة 😌", "تنزعج بشدة 😤", "تضحك ببرود 😎", "تصمت تماماً 🤐"]
+}
+},
+{
+id: 5,
+title: "ما هي الصفة الأبرز عندما يكون [الاسم] غاضباً؟",
+options: ["يصبح هادئاً بشكل مخيف 🧊", "يتحدث كثيراً 🗣️", "يرفض التكلم مع أي أحد 🚪", "يبتسم ابتسامة غريبة 🙃"]
+}
+];
+
+// Initialization
+window.addEventListener('DOMContentLoaded', () => {
+// Check if URL has a quiz hash (#quiz=...)
+if (window.location.hash && window.location.hash.includes('quiz=')) {
+loadQuizFromHash();
+}
+});
+
+// Navigation helpers
+function showScreen(screenId) {
+const screens = ['screen-home', 'screen-setup', 'screen-builder', 'screen-share', 'screen-taker', 'screen-result'];
+screens.forEach(id => {
+document.getElementById(id).classList.add('hidden');
+});
+document.getElementById(screenId).classList.remove('hidden');
+}
+
+// Start Workflow
+function startQuizCreation() {
+showScreen('screen-setup');
+}
+
+// Save Name & Gender and Build Active Questions List
+function saveSetupAndProceed() {
+const nameInput = document.getElementById('creator-name').value.trim();
+if (!nameInput) {
+showToast("يرجى كتابة اسمك أولاً!");
+return;
+}
+
+quizState.creatorName = nameInput;
+const genderRadio = document.querySelector('input[name="creator-gender"]:checked');
+quizState.creatorGender = genderRadio ? genderRadio.value : 'male';
+quizState.answers = new Array(baseQuestionsTemplate.length).fill(0);
+
+// Construct localized initial questions array based on name & gender
+quizState.questions = baseQuestionsTemplate.map(q => {
+let questionTitle = "";
+let questionOptions = [];
+
+if (q.titleGenderDependant) {
+questionTitle = q.titleGenderDependant[quizState.creatorGender];
+questionOptions = [...q.optionsGenderDependant[quizState.creatorGender]];
+} else {
+questionTitle = q.title;
+questionOptions = [...q.options];
+}
+
+// Replace [الاسم] placeholder with input name
+questionTitle = questionTitle.replace(/[الاسم]/g, quizState.creatorName);
+
+return {
+title: questionTitle,
+options: questionOptions
+};
+});
+
+currentQuestionIndex = 0;
+renderBuilderQuestion();
+showScreen('screen-builder');
+}
+
+// Render Current Question in Builder Mode
+function renderBuilderQuestion() {
+const q = quizState.questions[currentQuestionIndex];
+
+// Indicator
+document.getElementById('step-indicator').innerText = السؤال ${currentQuestionIndex + 1} من ${quizState.questions.length};
+
+// Title
+document.getElementById('builder-question-text').innerText = q.title;
+
+// Options List
+const optionsContainer = document.getElementById('builder-options-list');
+optionsContainer.innerHTML = '';
+
+const selectedAnswerIdx = quizState.answers[currentQuestionIndex];
+
+q.options.forEach((opt, idx) => {
+const isSelected = selectedAnswerIdx === idx;
+const optEl = document.createElement('div');
+optEl.className = p-4 rounded-2xl border-2 cursor-pointer transition flex items-center justify-between ${
+isSelected ? 'border-sky-500 bg-sky-50 shadow-sm' : 'border-slate-200 hover:border-sky-200 bg-white'
+}`;
+optEl.onclick = () => selectCreatorAnswer(idx);
+
+optEl.innerHTML = &lt;span class="font-bold text-slate-800 text-sm sm:text-base"&gt;${opt}</span>
+<div class="w-6 h-6 rounded-full border-2 flex items-center justify-center {isSelected ? '<i class="fa-solid fa-check text-xs"></i>' : ''}
+</div>
+`;
+optionsContainer.appendChild(optEl);
+});
+
+// Prev / Next button state
+document.getElementById('btn-prev-q').style.visibility = currentQuestionIndex === 0 ? 'hidden' : 'visible';
+const nextBtnText = currentQuestionIndex === quizState.questions.length - 1 ? 'إنهاء الاختبار 🎯' : 'التالي ➔';
+document.getElementById('btn-next-q').querySelector('span').innerText = nextBtnText;
+}
+
+function selectCreatorAnswer(idx) {
+quizState.answers[currentQuestionIndex] = idx;
+renderBuilderQuestion();
+}
+
+function prevQuestion() {
+if (currentQuestionIndex > 0) {
+currentQuestionIndex--;
+renderBuilderQuestion();
+}
+}
+
+function nextQuestion() {
+if (currentQuestionIndex < quizState.questions.length - 1) {
+currentQuestionIndex++;
+renderBuilderQuestion();
+} else {
+finishQuizCreation();
+}
+}
+
+// ================= EDIT MODAL LOGIC =================
+let modalTempOptions = [];
+
+function openEditModal() {
+const q = quizState.questions[currentQuestionIndex];
+modalTempOptions = [...q.options];
+renderModalOptions();
+document.getElementById('edit-modal').classList.remove('hidden');
+}
+
+function closeEditModal() {
+document.getElementById('edit-modal').classList.add('hidden');
+}
+
+function renderModalOptions() {
+const listContainer = document.getElementById('modal-options-list');
+listContainer.innerHTML = '';
+
+modalTempOptions.forEach((opt, idx) => {
+const item = document.createElement('div');
+item.className = "flex items-center gap-2";
+item.innerHTML = &lt;input type="text" value="${opt}" onchange="updateModalOptionText(${idx}, this.value)" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500"&gt; &lt;button onclick="deleteModalOption(${idx})" class="text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-xl transition" title="حذف">
+<i class="fa-solid fa-trash-can"></i>
+</button>
+`;
+listContainer.appendChild(item);
+});
+}
+
+function updateModalOptionText(idx, val) {
+if(val.trim() !== "") {
+modalTempOptions[idx] = val.trim();
+}
+}
+
+function deleteModalOption(idx) {
+if (modalTempOptions.length <= 2) {
+showToast("يجب أن يحتوي السؤال على خيارين على الأقل!");
+return;
+}
+modalTempOptions.splice(idx, 1);
+renderModalOptions();
+}
+
+function addNewOptionToCurrent() {
+const input = document.getElementById('new-option-input');
+const val = input.value.trim();
+if (val) {
+modalTempOptions.push(val);
+input.value = '';
+renderModalOptions();
+}
+}
+
+function saveEditChanges() {
+if (modalTempOptions.length < 2) {
+showToast("يرجى إضافة خيارين على الأقل!");
+return;
+}
+// Save updated options back to the active question
+quizState.questions[currentQuestionIndex].options = [...modalTempOptions];
+
+// Adjust current answer selection if out of bounds
+if (quizState.answers[currentQuestionIndex] >= modalTempOptions.length) {
+quizState.answers[currentQuestionIndex] = 0;
+}
+
+closeEditModal();
+renderBuilderQuestion();
+showToast("تم تحديث الإجابات بنجاح ✅");
+}
+
+// ================= COMPLETION & LINK GENERATION =================
+function finishQuizCreation() {
+// Encode data to Hash
+const payload = {
+name: quizState.creatorName,
+gender: quizState.creatorGender,
+ans: quizState.answers,
+qs: quizState.questions
+};
+
+const jsonStr = JSON.stringify(payload);
+const encoded = btoa(encodeURIComponent(jsonStr));
+
+const shareUrl = window.location.origin + window.location.pathname + '#quiz=' + encoded;
+document.getElementById('share-link-input').value = shareUrl;
+
+showScreen('screen-share');
+}
+
+function copyShareLink() {
+const linkInput = document.getElementById('share-link-input');
+linkInput.select();
+document.execCommand('copy');
+showToast("تم نسخ رابط الاختبار الخاص بك بنجاح! 📋");
+}
+
+function shareSocial(platform) {
+const link = document.getElementById('share-link-input').value;
+const text = اختبر صداقتنا! هل تعتقد أنك تعرفني حقاً؟ ادخل على هذا الاختبار الخاص بـ (${quizState.creatorName}) واكتشف الحقيقة 🕵️‍♂️:`;
+
+let url = "";
+switch (platform) {
+case 'whatsapp':
+url = https://api.whatsapp.com/send?text=${encodeURIComponent(text + " " + link)}; break; case 'telegram': url =https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}; break; case 'facebook': url =https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)};
+break;
+case 'snapchat':
+case 'instagram':
+copyShareLink();
+showToast("تم نسخ الرابط! افتح التطبيق وشاركه في قصتك أو رسائلك.");
+return;
+}
+if (url) window.open(url, '_blank');
+}
+
+// ================= LOAD & TAKE QUIZ (FRIEND SIDE) =================
+function loadQuizFromHash() {
+try {
+const hash = window.location.hash.split('quiz=')[1];
+if (!hash) return;
+
+const decodedJson = decodeURIComponent(atob(hash));
+const loadedData = JSON.parse(decodedJson);
+
+if (loadedData && loadedData.name && loadedData.qs) {
+quizState.creatorName = loadedData.name;
+quizState.creatorGender = loadedData.gender || 'male';
+quizState.answers = loadedData.ans;
+quizState.questions = loadedData.qs;
+
+document.getElementById('target-creator-name').innerText = quizState.creatorName;
+showScreen('screen-taker');
+}
+} catch (e) {
+console.error("Error parsing quiz URL hash", e);
+}
+}
+
+let friendCurrentQ = 0;
+
+function startFriendAnswering() {
+const fName = document.getElementById('friend-taker-name').value.trim();
+if (!fName) {
+showToast("لطفاً، أدخل اسمك للبدء!");
+return;
+}
+friendState.friendName = fName;
+friendState.answers = [];
+friendCurrentQ = 0;
+
+document.getElementById('taker-name-step').classList.add('hidden');
+document.getElementById('taker-questions-step').classList.remove('hidden');
+
+renderFriendQuestion();
+}
+
+function renderFriendQuestion() {
+const q = quizState.questions[friendCurrentQ];
+
+document.getElementById('taker-q-num').innerText = السؤال ${friendCurrentQ + 1} من ${quizState.questions.length};
+document.getElementById('taker-q-text').innerText = q.title;
+
+const container = document.getElementById('taker-options-container');
+container.innerHTML = '';
+
+q.options.forEach((opt, idx) => {
+const btn = document.createElement('button');
+btn.className = "w-full p-4 text-right rounded-2xl border-2 border-slate-200 hover:border-sky-500 hover:bg-sky-50 font-bold text-slate-800 transition bg-white shadow-sm flex items-center justify-between";
+btn.onclick = () => selectFriendAnswer(idx);
+btn.innerHTML = &lt;span&gt;${opt}</span>
+<i class="fa-solid fa-chevron-left text-slate-300"></i>
+`;
+container.appendChild(btn);
+});
+}
+
+function selectFriendAnswer(ansIdx) {
+friendState.answers.push(ansIdx);
+
+if (friendCurrentQ < quizState.questions.length - 1) {
+friendCurrentQ++;
+renderFriendQuestion();
+} else {
+calculateResults();
+}
+}
+
+function calculateResults() {
+let matches = 0;
+const total = quizState.questions.length;
+
+quizState.answers.forEach((correctIdx, i) => {
+if (friendState.answers[i] === correctIdx) {
+matches++;
+}
+});
+
+const scorePercent = Math.round((matches / total) * 100);
+showResultsScreen(scorePercent, matches, total);
+}
+
+function showResultsScreen(score, matches, total) {
+const badge = document.getElementById('result-badge');
+const title = document.getElementById('result-score-title');
+const status = document.getElementById('result-status-text');
+const desc = document.getElementById('result-description');
+
+title.innerText = درجة الصداقة:${score}%`;
+
+if (score >= 80) {
+badge.className = "w-24 h-24 rounded-full flex items-center justify-center text-5xl mx-auto mb-4 border-4 shadow-lg bg-emerald-100 border-emerald-400 text-emerald-600";
+badge.innerHTML = "💎";
+status.innerText = صديق حقيقي ومميز جداً! 🔥;
+desc.innerText = يا سلام! ${friendState.friendName} يعرف كل صغيرة وكبيرة عن ${quizState.creatorName}. أجبت بشكل صحيح على ${matches} من أصل ${total} أسئلة! هذه صداقة حقيقية وقوية.;
+} else if (score >= 50) {
+badge.className = "w-24 h-24 rounded-full flex items-center justify-center text-5xl mx-auto mb-4 border-4 shadow-lg bg-yellow-100 border-yellow-400 text-yellow-600";
+badge.innerHTML = "🙂";
+status.innerText = صديق جيد!;
+desc.innerText = ${friendState.friendName} يعرف الكثير عن ${quizState.creatorName} ولكن هناك بعض التفاصيل تحتاج لمعرفتها أكثر! أجبت على ${matches} من أصل ${total} أسئلة بشكل صحيح.;
+} else {
+badge.className = "w-24 h-24 rounded-full flex items-center justify-center text-5xl mx-auto mb-4 border-4 shadow-lg bg-red-100 border-red-400 text-red-600";
+badge.innerHTML = "🚨";
+status.innerText = ⚠️ انتبه! صديق مزيف محتمل!;
+desc.innerText = أوه لا! ${friendState.friendName} لم يتمكن من معرفة الكثير عن ${quizState.creatorName} (أجاب على ${matches} من أصل ${total} فقط). يبدو أنكم بحاجة لقضاء المزيد من الوقت معاً!;
+}
+
+showScreen('screen-result');
+}
+
+function resetToHome() {
+window.location.hash = '';
+showScreen('screen-home');
+}
+
+function showToast(msg) {
+const toast = document.getElementById('toast');
+document.getElementById('toast-msg').innerText = msg;
+toast.classList.remove('opacity-0', 'pointer-events-none');
+setTimeout(() => {
+toast.classList.add('opacity-0', 'pointer-events-none');
+}, 3000);
+}
+</script>
+</body>
+</html>
